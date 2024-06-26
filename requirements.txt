@@ -6,7 +6,7 @@ joblib==1.2.0
 Sastrawi==1.0.1
 wordcloud==1.9.3
 openpyxl==3.1.2
-streamlit
+streamlit==1.23.1  # Misalnya, jika versi spesifik diperlukan
 plotly==5.15.0
 xlsxwriter==1.4.5
-streamlit-aggrid
+streamlit-aggrid==0.3.3  # Misalnya, jika versi spesifik diperlukan

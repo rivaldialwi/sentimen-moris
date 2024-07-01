@@ -33,4 +33,4 @@ def login():
             st.session_state['password'] = password
             st.experimental_rerun()
         else:
-            st.error("Invalid username or password")
+            st.error("Username atau password salah")

@@ -87,8 +87,9 @@ def manage_accounts():
 def update_modal(user):
     user_id, email, username, password = user
     email = st.text_input("Email", value=email)
-    username = st.text_input("Username", value=username)
+    username = st.text_input("Username", value=username, disabled=True)
     password = st.text_input("Password", value=password, type="password")
+
     if st.button("Simpan Perubahan"):
         update_user(user_id, email, username, password)
         st.success(f"Pengguna {username} berhasil diperbarui")

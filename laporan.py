@@ -62,9 +62,9 @@ def clean_text(text):
     replaced_text = replace_and_remove_words(" ".join(stemmed_words))  # Replace and remove words
     return replaced_text
 
-# Fungsi untuk menjalankan aplikasi
+# Fungsi untuk menjalankan Website
 def run():
-    st.title("Aplikasi Analisis Sentimen Moris")
+    st.title("Website Analisis Sentimen Moris Indonesia")
 
     st.header("Unggah file untuk Grafik dan Word Cloud Sentimen")
     uploaded_excel = st.file_uploader("Unggah file Excel", type=["xlsx"], key="file_uploader_analysis")

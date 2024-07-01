@@ -67,9 +67,9 @@ def convert_df_to_excel(df):
     processed_data = output.getvalue()
     return processed_data
 
-# Fungsi untuk menjalankan aplikasi
+# Fungsi untuk menjalankan Website
 def run():
-    st.title("Aplikasi Analisis Sentimen Moris")
+    st.title("Website Analisis Sentimen Moris Indonesia")
 
     tab1, tab2 = st.tabs(["Analisis Satu Kalimat", "Analisis File"])
 

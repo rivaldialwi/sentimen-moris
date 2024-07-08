@@ -53,9 +53,21 @@ def manage_accounts():
     email = st.text_input("Email")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
+
     if st.button("Tambah Pengguna"):
-        create_user(email, username, password)
-        st.success("Pengguna berhasil ditambahkan")
+        if not email or not username or not password:
+            st.error("Tolong masukan username atau password terlebih dahulu")
+        elif "@gmail.com" not in email:
+            st.error("Email Harus Menggunakan '@gmail.com'")
+        else:
+            cek_users=read_users()
+            usernames=[user[2]for user in cek_users]
+
+            if username in usernames:
+                st.error("Username sudah di pakai")
+            else:
+                create_user(email, username, password)
+                st.success("Pengguna berhasil ditambahkan")
 
     # Menampilkan daftar pengguna
     st.subheader("Daftar Pengguna")

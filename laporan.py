@@ -23,6 +23,13 @@ replace_words = {
     "nya": "",
     "kok": "",
     "sih": "",
+    "romantic": "",
+    "aja": "",
+    "love": "",
+    "toko": "",
+    "doang": "",
+    "midnight": "",
+    "minggu": "",
     "ga": "tidak",
     "gak": "tidak",
     "tidakk": "tidak",
@@ -43,7 +50,7 @@ def replace_and_remove_words(text):
 
 # Fungsi untuk membuat word cloud
 def create_word_cloud(text, title):
-    wordcloud = WordCloud(width=800, height=400, background_color='white').generate(text)
+    wordcloud = WordCloud(width=200, height=200, background_color='white').generate(text)
     fig, ax = plt.subplots()
     ax.imshow(wordcloud, interpolation='bilinear')
     ax.axis('off')

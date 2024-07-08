@@ -82,7 +82,7 @@ def run():
 
         if st.button("Analisis"):
             if input_text.strip() == "":
-                st.error("Tolong masukkan kalimat terlebih dahulu.")
+                st.error("Tolong masukkan kalimat terlebih dahulu")
             else:
                 result = classify_text(input_text)
                 st.write("Hasil Analisis Sentimen:", result)

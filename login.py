@@ -20,7 +20,9 @@ def login():
     password = st.text_input("Password", type="password")
     
     if st.button("Login"):
-        if validate_login(username, password, 'admin'):
+        if not username or not password :
+            st.error("Tolong masukan username atau password terlebih dahulu")
+        elif validate_login(username, password, 'admin'):
             st.session_state['logged_in'] = True
             st.session_state['role'] = 'admin'
             st.session_state['username'] = username

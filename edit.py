@@ -32,13 +32,18 @@ def show_dialog(user_data):
     def dialog():
         st.write("Edit Data Anda Di Bawah Ini:")
         new_email = st.text_input("New Email", value=st.session_state['edit_email'])
-        new_username = st.text_input("New Username", value=st.session_state['edit_username'])
+        new_username = st.text_input("New Username", value=st.session_state['edit_username'], disabled=True)
         new_password = st.text_input("New Password", value=st.session_state['edit_password'], type="password")
         
         if st.button("Save"):
-            update_user_data(user_id, new_username, new_email, new_password)
-            st.success("Edit Data Berhasil")
-            st.experimental_rerun()
+            if not new_email or not new_password:
+                st.error("Tolong masukan username atau password terlebih dahulu")
+            elif "@gmail.com" not in new_email:
+                st.error("Email Harus Menggunakan '@gmail.com'")
+            else:
+                update_user_data(user_id, new_username, new_email, new_password)
+                st.success("Edit Data Berhasil")
+                st.experimental_rerun()
 
     dialog()
 
@@ -56,7 +61,7 @@ def run():
             return
 
         username = st.text_input("Username", value=st.session_state['username'], disabled=True)
-        password = st.text_input("Password", value=st.session_state['password'], type="password")
+        password = st.text_input("Password", value=st.session_state['password'], disabled=True, type="password")
 
         if st.button("Edit Data"):
             user_data = get_user_data(username, st.session_state['password'])

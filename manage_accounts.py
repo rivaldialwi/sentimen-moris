@@ -56,7 +56,7 @@ def manage_accounts():
 
     if st.button("Tambah Pengguna"):
         if not email or not username or not password:
-            st.error("Tolong masukan username atau password terlebih dahulu")
+            st.error("Tolong masukan email username atau password terlebih dahulu")
         elif "@gmail.com" not in email:
             st.error("Email Harus Menggunakan '@gmail.com'")
         else:
@@ -103,9 +103,14 @@ def update_modal(user):
     password = st.text_input("Password", value=password, type="password")
 
     if st.button("Simpan Perubahan"):
-        update_user(user_id, email, username, password)
-        st.success(f"Pengguna {username} berhasil diperbarui")
-        st.experimental_rerun()
+        if not email or not password:
+            st.error("Tolong masukan email atau password terlebih dahulu")
+        elif "@gmail.com" not in email:
+            st.error("Email Harus Menggunakan '@gmail.com'")
+        else:
+            update_user(user_id, email, username, password)
+            st.success(f"Pengguna {username} berhasil diperbarui")
+            st.experimental_rerun()
 
 # Fungsi untuk menampilkan modal konfirmasi hapus pengguna menggunakan experimental dialog
 @st.experimental_dialog("Konfirmasi Hapus Pengguna")

@@ -37,7 +37,7 @@ def show_dialog(user_data):
         
         if st.button("Save"):
             if not new_email or not new_password:
-                st.error("Tolong masukan username atau password terlebih dahulu")
+                st.error("Tolong masukan email atau password terlebih dahulu")
             elif "@gmail.com" not in new_email:
                 st.error("Email Harus Menggunakan '@gmail.com'")
             else:

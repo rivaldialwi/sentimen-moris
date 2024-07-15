@@ -3,6 +3,7 @@ import streamlit as st
 import nltk
 import matplotlib.pyplot as plt
 import plotly.express as px
+from replace_words import replace_words_negatif, replace_words_netral, replace_words_positif
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -16,181 +17,6 @@ def download_nltk_resources():
 
 # Panggil fungsi unduh NLTK resource di awal
 download_nltk_resources()
-
-# Daftar kata yang akan diganti atau dihapus
-replace_words_negatif = {
-    "yang": "",
-    "nya": "",
-    "kok": "",
-    "sih": "",
-    "romantic": "",
-    "aja": "",
-    "love": "",
-    "toko": "",
-    "doang": "",
-    "midnight": "",
-    "minggu": "",
-    "kak": "",
-    "beli": "",
-    "puas": "",
-    "enak": "",
-    "pas": "",
-    "suka": "",
-    "pure": "",
-    "jakarta": "",
-    "kalo": "",
-    "jam": "",
-    "wangi": "",
-    "puluh": "",
-    "tiup": "",
-    "langgan": "",
-    "kena": "",
-    "layan": "",
-    "kemaren": "",
-    "sesuai": "",
-    "putih": "",
-    "parfum": "",
-    "tahan": "",
-    "jalan": "",
-    "angin": "",
-    "cepat": "",
-    "cepet": "",
-    "kaya": "",
-    "aroma": "",
-    "tinggal": "",
-    "buka": "",
-    "sudah": "",
-    "sampe": "",
-    "barang": "",
-    "menit": "",
-    "express": "",
-    "percaya": "",
-    "make": "",
-    "ekspektasi": "",
-    "banget": "",
-    "harga": "",
-    "pake": "",
-    "woody": "",
-    "kotak": "",
-    "moris": "",
-    "jasa": "",
-    "alfamart": "",
-    "belanja": "",
-    "kuat": "",
-    "botol": "",
-    "ongkos": "",
-    "estimasi": "",
-    "kaos": "",
-    "leher": "",
-    "pakai": "",
-    "tutup": "",
-    "delapan": "",
-    "modal": "",
-    "layak": "",
-    "murah": "",
-    "bijak": "",
-    "iklan": "",
-    "box": "",
-    "kardus": "",
-    "kembali": "",
-    "harum": "",
-    "metropolis": "",
-    "kepala": "",
-    "kualitas": "",
-    "pesan": "",
-    "semprot": "",
-    "kirim": "",
-    "massa": "",
-    "hubung": "",
-    "rumah": "",
-    "nyata": "",
-    "mudah": "",
-    "sangat": "",
-    "worth": "",
-    "sengat": "",
-    "baju": "",
-    "ka": "",
-    "ga": "tidak",
-    "gak": "tidak",
-    "tidakk": "tidak",
-    "udah": "sudah",
-    "cewe": "cewek",
-    "cew": "cewek",
-    "cowo": "cowok",
-    "cow": "cowok",
-}
-
-replace_words_netral = {
-    "ruang": "",
-    "campur": "",
-    "best": "",
-    "ibu": "",
-    "ga": "",
-    "gak": "",
-    "nya": "",
-    "kalo": "",
-    "ka": "",
-    "kak": "",
-    "bau": "",
-    "borong": "",
-    "bener": "",
-    "yah": "",
-}
-
-
-replace_words_positif = {
-    "harga": "",
-    "ka": "",
-    "kak": "",
-    "biar": "",
-    "segitu": "",
-    "kelas": "",
-    "estimasi": "",
-    "pakai": "",
-    "baju": "",
-    "se": "",
-    "nya": "",
-    "emang": "",
-    "biru": "",
-    "pusing": "",
-    "bismillah": "",
-    "udah": "",
-    "kepala": "",
-    "tajam": "",
-    "kirim": "",
-    "sekolah": "",
-    "belah": "",
-    "anak": "",
-    "bikin": "",
-    "botol": "",
-    "jodoh": "",
-    "motif": "",
-    "parfum": "",
-    "beli": "",
-    "varian": "",
-    "breeze": "",
-    "gak": "",
-    "ocean": "",
-    "keluarga": "",
-    "metropolis": "",
-    "woody": "",
-    "morris": "",
-    "pas": "",
-    "orang": "",
-    "langsung": "",
-    "deh": "",
-    "pake": "",
-    "sih": "",
-    "jalan": "",
-    "pokok": "",
-    "moris": "",
-    "sesal": "",
-    "sumpah": "",
-    "artis": "",
-    "asa": "",
-    "asik": "",
-}
-
 
 # Fungsi untuk mengganti atau menghapus kata-kata tertentu dalam teks
 def replace_and_remove_words(text, replace_words):
@@ -232,45 +58,49 @@ def run():
         
         # Periksa apakah kolom 'Human' ada di file yang diunggah
         if 'Human' in df_excel.columns:
-            # Hitung kemunculan setiap sentimen
-            sentiment_counts = df_excel['Human'].value_counts().reset_index()
-            sentiment_counts.columns = ['Sentiment', 'Count']
-            
-            # Buat diagram batang menggunakan Plotly
-            color_discrete_map = {
-                'Negatif': 'red',
-                'Netral': 'gray',
-                'Positif': 'green'
-            }
-
-            fig = px.bar(sentiment_counts, x='Sentiment', y='Count', color='Sentiment',
-                         labels={'Sentiment': 'Sentimen', 'Count': 'Jumlah'},
-                         title='Distribusi Sentimen',
-                         text='Count',
-                         color_discrete_map=color_discrete_map)
-            
-            fig.update_traces(texttemplate='%{text}', textposition='outside')
-            fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
-            
-            st.plotly_chart(fig)
-            
-            # Hasilkan kata untuk setiap sentimen
-            sentiments = df_excel['Human'].unique()
-            for sentiment in sentiments:
-                sentiment_text = " ".join(df_excel[df_excel['Human'] == sentiment]['Text'])
+            # Periksa apakah kolom 'Human' kosong
+            if df_excel['Human'].isnull().all():
+                st.error("Kolom 'Human' tidak boleh kosong.")
+            else:
+                # Hitung kemunculan setiap sentimen
+                sentiment_counts = df_excel['Human'].value_counts().reset_index()
+                sentiment_counts.columns = ['Sentiment', 'Count']
                 
-                # Pilih daftar kata yang akan diganti atau dihapus berdasarkan sentimen
-                if sentiment == 'Negatif':
-                    replace_words = replace_words_negatif
-                elif sentiment == 'Netral':
-                    replace_words = replace_words_netral
-                elif sentiment == 'Positif':
-                    replace_words = replace_words_positif
-                else:
-                    replace_words = {}
+                # Buat diagram batang menggunakan Plotly
+                color_discrete_map = {
+                    'Negatif': 'red',
+                    'Netral': 'gray',
+                    'Positif': 'green'
+                }
 
-                sentiment_text_cleaned = clean_text(sentiment_text, replace_words)
-                create_word_cloud(sentiment_text_cleaned, f'Word Cloud untuk Sentimen {sentiment}')
+                fig = px.bar(sentiment_counts, x='Sentiment', y='Count', color='Sentiment',
+                             labels={'Sentiment': 'Sentimen', 'Count': 'Jumlah'},
+                             title='Distribusi Sentimen',
+                             text='Count',
+                             color_discrete_map=color_discrete_map)
+                
+                fig.update_traces(texttemplate='%{text}', textposition='outside')
+                fig.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+                
+                st.plotly_chart(fig)
+                
+                # Hasilkan kata untuk setiap sentimen
+                sentiments = df_excel['Human'].unique()
+                for sentiment in sentiments:
+                    sentiment_text = " ".join(df_excel[df_excel['Human'] == sentiment]['Text'])
+                    
+                    # Pilih daftar kata yang akan diganti atau dihapus berdasarkan sentimen
+                    if sentiment == 'Negatif':
+                        replace_words = replace_words_negatif
+                    elif sentiment == 'Netral':
+                        replace_words = replace_words_netral
+                    elif sentiment == 'Positif':
+                        replace_words = replace_words_positif
+                    else:
+                        replace_words = {}
+
+                    sentiment_text_cleaned = clean_text(sentiment_text, replace_words)
+                    create_word_cloud(sentiment_text_cleaned, f'Word Cloud untuk Sentimen {sentiment}')
         else:
             st.error("File harus memiliki kolom 'Human'.")
 

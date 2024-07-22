@@ -81,9 +81,6 @@ def run():
             st.session_state['data'] = fetch_data()
 
         if st.button("Analisis"):
-            if input_text.strip() == "":
-                st.error("Tolong masukkan kalimat terlebih dahulu")
-            else:
                 result = classify_text(input_text)
                 st.write("Hasil Analisis Sentimen:", result)
                 insert_to_db(input_text, result)

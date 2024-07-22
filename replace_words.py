@@ -118,6 +118,7 @@ replace_words_netral = {
     "borong": "",
     "bener": "",
     "yah": "",
+    "cocok": "",
 }
 
 

@@ -91,6 +91,8 @@ replace_words_negatif = {
     "sengat": "",
     "baju": "",
     "ka": "",
+    "aman": "",
+    "padalan": "",
     "ga": "tidak",
     "gak": "tidak",
     "tidakk": "tidak",
@@ -170,4 +172,6 @@ replace_words_positif = {
     "artis": "",
     "asa": "",
     "asik": "",
+    "ya": "",
+    "andal": "andalan",
 }

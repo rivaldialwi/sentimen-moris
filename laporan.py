@@ -9,6 +9,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from wordcloud import WordCloud
 from collections import Counter
+from create_pdf import create_pdf
 
 # Fungsi untuk mengunduh resource NLTK secara senyap
 def download_nltk_resources():
@@ -44,6 +45,14 @@ def clean_text(text, replace_words):
     stemmed_words = [stemmer.stem(word) for word in cleaned_words]  # Stemming
     replaced_text = replace_and_remove_words(" ".join(stemmed_words), replace_words)  # Replace and remove words
     return replaced_text
+
+# Fungsi untuk menghitung kemunculan kata-kata tertentu
+def count_specific_words(text, words_to_count):
+    word_list = text.split()
+    word_counts = Counter(word_list)
+    specific_word_counts = {word: word_counts[word] for word in words_to_count}
+    sorted_word_counts = dict(sorted(specific_word_counts.items(), key=lambda item: item[1], reverse=True))
+    return sorted_word_counts
 
 # Fungsi untuk menjalankan Website
 def run():
@@ -84,6 +93,11 @@ def run():
                 
                 st.plotly_chart(fig)
                 
+                # Kata-kata yang ingin dihitung kemunculannya
+                words_to_count = ["metropolis", "freedom", "vintage", "advent", "creative", "independent", "woody", "aquatic", "oud", "amber"]
+
+                all_sentiments_text_cleaned = ""
+
                 # Hasilkan kata untuk setiap sentimen
                 sentiments = df_excel['Human'].unique()
                 for sentiment in sentiments:
@@ -100,7 +114,24 @@ def run():
                         replace_words = {}
 
                     sentiment_text_cleaned = clean_text(sentiment_text, replace_words)
+                    all_sentiments_text_cleaned += " " + sentiment_text_cleaned
                     create_word_cloud(sentiment_text_cleaned, f'Word Cloud untuk Sentimen {sentiment}')
+                
+                # Hitung kemunculan kata-kata tertentu dari semua teks yang telah dibersihkan
+                word_counts = count_specific_words(all_sentiments_text_cleaned, words_to_count)
+                word_counts_df = pd.DataFrame(word_counts.items(), columns=['Kata', 'Jumlah'])
+                
+                st.subheader("Produk Terpopuler")
+                st.dataframe(word_counts_df)
+
+                # Tombol untuk mengunduh tabel sebagai PDF
+                pdf_data = create_pdf(word_counts_df)
+                st.download_button(
+                    label="Unduh PDF",
+                    data=pdf_data,
+                    file_name="Produk Terpopuler.pdf",
+                    mime="application/pdf"
+                )
         else:
             st.error("File harus memiliki kolom 'Human'.")
 

@@ -10,6 +10,7 @@ from nltk.tokenize import word_tokenize
 from wordcloud import WordCloud
 from collections import Counter
 from create_pdf import create_pdf
+from fuzzywuzzy import process
 
 # Fungsi untuk mengunduh resource NLTK secara senyap
 def download_nltk_resources():
@@ -54,6 +55,18 @@ def count_specific_words(text, words_to_count):
     sorted_word_counts = dict(sorted(specific_word_counts.items(), key=lambda item: item[1], reverse=True))
     return sorted_word_counts
 
+# Fungsi untuk koreksi ejaan kata
+def correct_spelling(word, word_list):
+    # Cari kata yang paling mirip dari word_list
+    corrected_word, _ = process.extractOne(word, word_list)
+    return corrected_word
+
+# Fungsi untuk mempersiapkan words_to_count dengan kata yang benar
+def prepare_words_to_count(words_to_count):
+    unique_words = set(words_to_count)
+    corrected_words = {word: correct_spelling(word, unique_words) for word in unique_words}
+    return list(set(corrected_words.values()))  # Menghilangkan duplikat
+
 # Fungsi untuk menjalankan Website
 def run():
     st.title("Website Analisis Sentimen Moris Indonesia")
@@ -95,6 +108,7 @@ def run():
                 
                 # Kata-kata yang ingin dihitung kemunculannya
                 words_to_count = ["metropolis", "freedom", "vintage", "advent", "creative", "independent", "woody", "aquatic", "oud", "amber"]
+                corrected_words_to_count = prepare_words_to_count(words_to_count)
 
                 all_sentiments_text_cleaned = ""
 
@@ -118,10 +132,10 @@ def run():
                     create_word_cloud(sentiment_text_cleaned, f'Word Cloud untuk Sentimen {sentiment}')
                 
                 # Hitung kemunculan kata-kata tertentu dari semua teks yang telah dibersihkan
-                word_counts = count_specific_words(all_sentiments_text_cleaned, words_to_count)
+                word_counts = count_specific_words(all_sentiments_text_cleaned, corrected_words_to_count)
                 word_counts_df = pd.DataFrame(word_counts.items(), columns=['Kata', 'Jumlah'])
                 
-                st.subheader("Produk Terpopuler")
+                st.subheader("Kemunculan Kata-Kata Tertentu di Semua Sentimen")
                 st.dataframe(word_counts_df)
 
                 # Tombol untuk mengunduh tabel sebagai PDF
@@ -129,7 +143,7 @@ def run():
                 st.download_button(
                     label="Unduh PDF",
                     data=pdf_data,
-                    file_name="Produk Terpopuler.pdf",
+                    file_name="word_counts.pdf",
                     mime="application/pdf"
                 )
         else:
